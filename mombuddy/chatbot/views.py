@@ -6,7 +6,7 @@ from .models import FAQ
 def chatbot_view(request):
     response = None
     if request.method == 'POST':
-        user_query = request.POST.get('query', '') #('query': "whar is django")
+        user_query = request.POST.get('query', '') #('query': "what is django")
         keywords = user_query.lower().split()
         
         faqs = FAQ.objects.all()
@@ -20,6 +20,7 @@ def chatbot_view(request):
             if keyword_matches > max_keywords_matches:
                 max_keywords_matches = keyword_matches
                 matched_faq = faq
+                
         if matched_faq and max_keywords_matches > 0:
             response = matched_faq.answer
                 
