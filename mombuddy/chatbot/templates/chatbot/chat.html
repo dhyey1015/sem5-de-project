@@ -24,7 +24,7 @@
 
 
 
-{% comment %} <!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -43,49 +43,49 @@
             <h2>Bot's Response:</h2>
             <p>{{ response }}</p>
         </div>
-    {% endif %}
+    {% endif %} 
 
-    {% comment %} <script>
-        document.addEventListener("DOMContentLoaded", function
-            document.querySelectorAll('.invite-event-form') function(form){
-                document.addEventListener('submit', function(event){
-                    event.preventDefault();
+    <script>
+        // document.addEventListener("DOMContentLoaded", function
+        //     document.querySelectorAll('.invite-event-form').function(form){
+        //         document.addEventListener('submit', function(event){
+        //             event.preventDefault();
 
-                    let formdata = new FormData(form)
-                    let url = form.getAttribute('action');
-                    let csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-                    // send post request
-                    fetch(url, {
-                        method : 'POST',
-                        headers:{
-                            'X-CSRFToken': csrfToken
-                        },
-                        body : formdata
-                    })
-                    // get the response
-                    .then(response => {
-                        if(response.ok){
-                            return response.json();
-                        }
-                        else
-                        {
-                            thow new Error('Network response was not ok.')
-                        }
-                    })
+        //             let formdata = new FormData(form)
+        //             let url = form.getAttribute('action');
+        //             let csrfToken = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+        //             // send post request
+        //             fetch(url, {
+        //                 method : 'POST',
+        //                 headers:{
+        //                     'X-CSRFToken': csrfToken
+        //                 },
+        //                 body : formdata
+        //             })
+        //             // get the response
+        //             .then(response => {
+        //                 if(response.ok){
+        //                     return response.json();
+        //                 }
+        //                 else
+        //                 {
+        //                     thow new Error('Network response was not ok.')
+        //                 }
+        //             })
 
-                    .then(data => {
-                        // handle successful response
-                        alert('Event invitation sent successfully!');
-                        console.log(data);
-                    })
+        //             .then(data => {
+        //                 // handle successful response
+        //                 alert('Event invitation sent successfully!');
+        //                 console.log(data);
+        //             })
 
-                    .catch(error => {
-                        // handle error
-                        console.error('There was a problem with the fetch operation:', error);
-                        alert('There was an error sending the invitation.');
-                    });
-                });
-            }); 
+        //             .catch(error => {
+        //                 // handle error
+        //                 console.error('There was a problem with the fetch operation:', error);
+        //                 alert('There was an error sending the invitation.');
+        //             });
+        //         });
+        //     }); 
         </script>
 </body>
-</html> {% endcomment %}
+</html> -->
