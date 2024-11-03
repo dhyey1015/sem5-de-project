@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Mom Buddy</title>
+</head>
+<body>
+    <nav id="sidebar">
+        <div class="float-top">
+            <div class="sidebar-controls">
+                <button class="new-chat"><i class="fa fa-plus"></i> New chat</button>
+                <button class="hide-sidebar"><i class="fa fa-chevron-left"></i></button>
+            </div>
+            <ul class="conversations">
+                <li class="grouping">Today</li>
+                <li class="active">
+                    <button class="conversation-button"><i class="fa fa-message fa-regular"></i> This is a conversation title</button>
+                    <div class="fade"></div>
+                    <div class="edit-buttons">
+                        <button><i class="fa fa-edit"></i></button>
+                        <button><i class="fa fa-trash"></i></button>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <div class="user-menu">
+            <button>
+                <i class="user-icon">u</i>
+                username
+                <i class="fa fa-ellipsis dots"></i>
+            </button>
+            <ul>
+                <li><button>My plan</button></li>
+                <li><button>Custom instructions</button></li>
+                <li><button>Settings &amp; Beta</button></li>
+                <li><button>Log out</button></li>
+            </ul>
+        </div>
+    </nav>
+    <main>
+        <div class="view new-chat-view" style="display: none;">
+            <div class="logo" style="padding: 70px;">
+                Mom-Buddy
+            </div>
+        </div>
+        <div class="view conversation-view" style="display: flex; flex-direction: column;">
+            <div id="chat-messages">
+                <!-- Messages will be dynamically inserted here -->
+            </div>
+        </div> 
+
+        <div id="message-form">
+            <form id="messageForm">
+                {% csrf_token %}
+                <div class="message-wrapper">
+                    <textarea id="message" rows="1" placeholder="Ask something..."></textarea>
+                    <button type="submit" class="send-button">Send</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <script>
+        {% comment %} document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('messageForm').addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent traditional form submission
+        
+                // Get the message input
+                const message = document.getElementById('message').value;
+                const conversationView = document.querySelector('.conversation-view');
+        
+                // Append user's message
+                conversationView.innerHTML += `
+                    <div class="user-message">
+                        <div class="identity">
+                            <i class="user-icon">u</i>
+                        </div>
+                        <div class="content">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+        
+                // Send the message to the backend using fetch
+                fetch('/chats/', {  // Make sure this matches the URL pattern for your chatbot view
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}', // Ensure CSRF token is passed
+                    },
+                    body: JSON.stringify({ query: message })  // Sending the message from textarea as JSON
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Append assistant's response
+                    conversationView.innerHTML += `
+                        <div class="assistant message">
+                            <div class="identity">
+                                <i class="gpt user-icon">G</i>
+                            </div>
+                            <div class="content">
+                                <p>${data.response}</p>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('message').value = ''; // Clear the textarea
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    conversationView.innerHTML += `
+                        <div class="error-message">An error occurred while fetching the response.</div>
+                    `;
+                });
+            });
+        }); {% endcomment %}
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('message');
+            const chatMessages = document.getElementById('chat-messages');
+
+            messageForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                appendMessage('user', message);
+                
+                // Clear input
+                messageInput.value = '';
+                
+                try {
+                    const response = await fetch('/chats/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                        body: JSON.stringify({ query: message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    appendMessage('assistant', data.response);
+                } catch (error) {
+                    console.error('Error:', error);
+                    appendMessage('error', 'An error occurred while fetching the response.');
+                }
+            });
+
+            function appendMessage(role, content) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = role === 'user' ? 'user-message' : 'assistant message';
+                
+                messageDiv.innerHTML = `
+                    <div class="identity">
+                        <i class="user-icon">${role === 'user' ? 'u' : 'G'}</i>
+                    </div>
+                    <div class="content">
+                        <p>${content}</p>
+                    </div>
+                `;
+                
+                chatMessages.appendChild(messageDiv);
+                // Scroll to bottom
+                messageDiv.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+<script>
+    const sidebar = document.querySelector("#sidebar");
+    const hide_sidebar = document.querySelector(".hide-sidebar");
+    const new_chat_button = document.querySelector(".new-chat");
+
+    hide_sidebar.addEventListener( "click", function() {
+        sidebar.classList.toggle( "hidden" );
+    } );
+
+    const user_menu = document.querySelector(".user-menu ul");
+    const show_user_menu = document.querySelector(".user-menu button");
+
+    show_user_menu.addEventListener( "click", function() {
+        if( user_menu.classList.contains("show") ) {
+            user_menu.classList.toggle( "show" );
+            setTimeout( function() {
+                user_menu.classList.toggle( "show-animate" );
+            }, 200 );
+        } else {
+            user_menu.classList.toggle( "show-animate" );
+            setTimeout( function() {
+                user_menu.classList.toggle( "show" );
+            }, 50 );
+        }
+    } );
+
+    const models = document.querySelectorAll(".model-selector button");
+
+    for( const model of models ) {
+        model.addEventListener("click", function() {
+            document.querySelector(".model-selector button.selected")?.classList.remove("selected");
+            model.classList.add("selected");
+        });
+    }
+
+    const message_box = document.querySelector("#message");
+
+    message_box.addEventListener("keyup", function() {
+        message_box.style.height = "auto";
+        let height = message_box.scrollHeight + 2;
+        if( height > 200 ) {
+            height = 200;
+        }
+        message_box.style.height = height + "px";
+    });
+
+    function show_view( view_selector ) {
+        document.querySelectorAll(".view").forEach(view => {
+            view.style.display = "none";
+        });
+
+        document.querySelector(view_selector).style.display = "flex";
+    }
+
+    new_chat_button.addEventListener("click", function() {
+        show_view( ".new-chat-view" );
+    });
+
+    document.querySelectorAll(".conversation-button").forEach(button => {
+        button.addEventListener("click", function() {
+            show_view( ".conversation-view" );
+        })
+    });
+
+</script>
+</html>

@@ -419,7 +419,7 @@ p.secondary {
     color: var(--color-model-name);
     padding: 23px;
     border-bottom: 1px solid var(--color-border2);
-    font-size: 0.85em;
+    font-size: 20px;
 }
 
 .message {
@@ -505,4 +505,36 @@ button.send-button:hover {
 
 p {
     margin: 0 0 1.5em 0;
+}
+
+view.new-chat-view {
+    display: flex !important; /* Force display */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--color-main); /* Use your theme color */
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.logo {
+    font-size: 3rem;
+    color: #ffffff;
+    text-align: center;
+    padding: 2rem;
+    border: 2px solid #ffffff; /* Debug border */
+}
+
+.view.conversation-view {
+    display: none;
+    opacity: 0; /* Hide initially */
+    transition: opacity 0.3s ease;
+}
+
+.view.conversation-view.active {
+    display: flex;
+    opacity: 1;
 }
