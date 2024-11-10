@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Interface</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #ffffff;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.sidebar-header {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.menu-list {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.menu-item {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+}
+
+.menu-item.active {
+    font-weight: bold;
+    color: #000;
+}
+
+.upgrade {
+    margin-top: auto;
+    color: #ff7f50;
+}
+
+.main-content {
+    width: 80%;
+    padding: 40px;
+}
+
+.header h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.input-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #5a67d8;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #434190;
+}
+
+</style>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>ChatGPT</h2>
+            </div>
+            <!-- <ul class="menu-list">
+                <li class="menu-item active">Today</li>
+                <li class="menu-item">Yesterday</li>
+                <li class="menu-item">Previous 7 Days</li>
+                <li class="menu-item">Previous 30 Days</li>
+                <li class="menu-item upgrade">Upgrade Plan</li>
+            </ul> -->
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>What can I help with?</h2>
+            </div>
+            <div class="flex w-full flex-col gap-1.5 rounded-[26px] p-1.5 transition-colors bg-[#f4f4f4] dark:bg-token-main-surface-secondary">
+                <div class="flex items-end gap-1.5 pl-4 md:gap-2">
+                    <div class="-ml-2.5 flex" style="opacity: 1; will-change: auto;">
+                        <div class="relative">
+                            <div class="relative">
+                                <div class="flex flex-col">
+                                    <input multiple="" type="file" tabindex="-1" class="hidden" style="display: none;">
+                                    <span class="hidden"></span>
+                                    <button type="button" id="radix-:re:" aria-haspopup="menu" aria-expanded="false" data-state="closed" class="text-token-text-primary border border-transparent inline-flex items-center justify-center gap-1 rounded-lg text-sm dark:transparent dark:bg-transparent leading-none outline-none cursor-pointer hover:bg-token-main-surface-secondary dark:hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary radix-state-active:text-token-text-secondary radix-disabled:cursor-auto radix-disabled:bg-transparent radix-disabled:text-token-text-tertiary dark:radix-disabled:bg-transparent m-0 h-0 w-0 border-none bg-transparent p-0">
+                                    </button><span class="flex" data-state="closed"><span>
+                                        <button class="flex items-center justify-center h-8 w-8 rounded-full text-token-text-primary dark:text-white focus-visible:outline-black dark:focus-visible:outline-white mb-1" aria-disabled="false" aria-label="Attach files"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M9 7C9 4.23858 11.2386 2 14 2C16.7614 2 19 4.23858 19 7V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15V9C5 8.44772 5.44772 8 6 8C6.55228 8 7 8.44772 7 9V15C7 17.7614 9.23858 20 12 20C14.7614 20 17 17.7614 17 15V7C17 5.34315 15.6569 4 14 4C12.3431 4 11 5.34315 11 7V15C11 15.5523 11.4477 16 12 16C12.5523 16 13 15.5523 13 15V9C13 8.44772 13.4477 8 14 8C14.5523 8 15 8.44772 15 9V15C15 16.6569 13.6569 18 12 18C10.3431 18 9 16.6569 9 15V7Z" fill="currentColor"></path>
+                                        </svg>
+                                    </button></span></span>
+                                        <div type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rh:" data-state="closed"></div></div></div></div></div><div class="flex min-w-0 flex-1 flex-col" style="transform: none; transform-origin: 50% 50% 0px;"><div class="_prosemirror-parent_15ceg_1 text-token-text-primary max-h-[25dvh] max-h-52 overflow-auto default-browser"><textarea class="block h-10 w-full resize-none border-0 bg-transparent px-0 py-2 text-token-text-primary placeholder:text-token-text-secondary" autofocus="" placeholder="Message ChatGPT" style="display: none;"></textarea><script nonce="">window.__oai_logHTML?window.__oai_logHTML():window.__oai_SSR_HTML=window.__oai_SSR_HTML||Date.now();requestAnimationFrame((function(){window.__oai_logTTI?window.__oai_logTTI():window.__oai_SSR_TTI=window.__oai_SSR_TTI||Date.now()}))</script><div contenteditable="true" translate="no" class="ProseMirror" id="prompt-textarea"><p data-placeholder="Message ChatGPT" class="placeholder"><br class="ProseMirror-trailingBreak"></p></div></div></div><div class="min-w-8"><button disabled="" aria-label="Send prompt" data-testid="send-button" class="mb-1 me-1 flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:text-[#f4f4f4] disabled:hover:opacity-100 dark:bg-white dark:text-black dark:focus-visible:outline-white disabled:dark:bg-token-text-quaternary dark:disabled:text-token-main-surface-secondary disabled:bg-[#D7D7D7]"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-2xl"><path fill-rule="evenodd" clip-rule="evenodd" d="M15.1918 8.90615C15.6381 8.45983 16.3618 8.45983 16.8081 8.90615L21.9509 14.049C22.3972 14.4953 22.3972 15.2189 21.9509 15.6652C21.5046 16.1116 20.781 16.1116 20.3347 15.6652L17.1428 12.4734V22.2857C17.1428 22.9169 16.6311 23.4286 15.9999 23.4286C15.3688 23.4286 14.8571 22.9169 14.8571 22.2857V12.4734L11.6652 15.6652C11.2189 16.1116 10.4953 16.1116 10.049 15.6652C9.60265 15.2189 9.60265 14.4953 10.049 14.049L15.1918 8.90615Z" fill="currentColor"></path></svg></button></div></div></div>
+            <div class="input-section">
+                <input type="text" placeholder="Message ChatGPT" />
+                <div class="button-group">
+                    <button>Send</button>
+                    <!-- <button>Summarize Text</button>
+                    <button>Surprise Me</button>
+                    <button>Help Me Write</button>
+                    <button>More</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    // This script will handle the interactivity if needed (e.g., button clicks, etc.)
+// For now, we are just setting up the basic structure.
+document.addEventListener("DOMContentLoaded", () => {
+    console.log("Chat interface loaded.");
+});
+
+</script>
+</html>

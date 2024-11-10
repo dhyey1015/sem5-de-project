@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT-like Interface</title>
+    <!-- <link rel="stylesheet" href="style.css"> -->
+</head>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.chat-container {
+    width: 400px;
+    height: 600px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.chat-header {
+    background-color: #3b5998;
+    padding: 15px;
+    text-align: center;
+    color: white;
+}
+
+.chat-box {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.chat-input {
+    display: flex;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background-color: #3b5998;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background-color: #2d4373;
+}
+
+.message {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.user-message {
+    background-color: #d4f1f4;
+    align-self: flex-end;
+}
+
+.bot-message {
+    background-color: #f0f0f0;
+}
+
+</style>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>ChatGPT Interface</h2>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will be appended here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="userInput" placeholder="Type your message..." />
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+document.getElementById('userInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') sendMessage();
+});
+
+function sendMessage() {
+    const inputField = document.getElementById('userInput');
+    const messageText = inputField.value.trim();
+    
+    if (messageText === "") return;
+
+    // Create user message
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('message', 'user-message');
+    userMessage.textContent = messageText;
+
+    const chatBox = document.getElementById('chat-box');
+    chatBox.appendChild(userMessage);
+
+    // Scroll to the bottom
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Clear the input field
+    inputField.value = "";
+
+    // Simulate bot response
+    setTimeout(() => {
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('message', 'bot-message');
+        botMessage.textContent = "Bot: I received your message!";
+
+        chatBox.appendChild(botMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }, 1000);
+}
+
+    </script>
+</body>
+</html>
