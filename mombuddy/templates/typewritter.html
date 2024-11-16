@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <title>Mom-Buddy Chat</title>
+</head>
+<body>
+{% comment %}     
+    
+    <nav id="sidebar">
+        <div class="float-top">
+            <div class="sidebar-controls">
+                <button class="new-chat"><i class="fa fa-plus"></i> New chat</button>
+                <button class="hide-sidebar"><i class="fa fa-chevron-left"></i></button>
+            </div>
+            <ul class="conversations">
+                <li class="grouping">Today</li>
+                <li class="active">
+                    <button class="conversation-button">
+                        <i class="fa fa-message fa-regular"></i>
+                        New Conversation
+                    </button>
+                    <div class="fade"></div>
+                    <div class="edit-buttons">
+                        <button><i class="fa fa-edit"></i></button>
+                        <button><i class="fa fa-trash"></i></button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="user-menu">
+            <button>
+                <i class="user-icon">u</i>
+                username
+                <i class="fa fa-ellipsis dots"></i>
+            </button>
+            <ul>
+                <li><button>My plan</button></li>
+                <li><button>Custom instructions</button></li>
+                <li><button>Settings &amp; Beta</button></li>
+                <li><button>Log out</button></li>
+            </ul>
+        </div>
+    </nav>
+     {% endcomment %}
+    <main>
+        <div class="view new-chat-view">
+            <div class="logo">Mom-Buddy</div>
+        </div>
+        
+        <div class="view conversation-view">
+            <div class="model-name">Mom-Buddy Chat Assistant</div>
+            <div id="chat-messages">
+                <!-- Messages will be inserted here -->
+            </div>
+        </div>
+
+        <div id="message-form">
+            <form id="messageForm">
+                {% csrf_token %}
+                <div class="message-wrapper">
+                    <textarea 
+                        id="message" 
+                        rows="1" 
+                        placeholder="Message Mom-Buddy..."
+                        maxlength="4000"
+                    ></textarea>
+                    <button type="submit" class="send-button">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="disclaimer">
+                    Mom-Buddy can make mistakes. Consider checking important information.
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messageForm = document.getElementById('messageForm');
+            const messageInput = document.getElementById('message');
+            const chatMessages = document.getElementById('chat-messages');
+            const conversationView = document.querySelector('.conversation-view');
+            
+            // Show conversation view when starting
+            conversationView.style.display = 'flex';
+            document.querySelector('.new-chat-view').style.display = 'none';
+
+            messageForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                const userMessageHTML = `
+                    <div class="message user">
+                        <div class="identity">
+                            <i class="user-icon">u</i>
+                        </div>
+                        <div class="content">
+                            <p>${message}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.insertAdjacentHTML('beforeend', userMessageHTML);
+                
+                // Clear input
+                messageInput.value = '';
+                
+                try {
+                    const response = await fetch('/chats/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        },
+                        body: JSON.stringify({ query: message })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+                    console.log("Message submitted:", message);
+                    console.log("Assistant response received:", data.response);
+                    
+                    // Add assistant message
+                    const assistantMessageHTML = `
+                        <div class="message assistant">
+                            <div class="identity">
+                                <i class="user-icon gpt">M</i>
+                            </div>
+                            <div class="content">
+                                <span class="typewriter">${data.response}</span>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.insertAdjacentHTML('beforeend', assistantMessageHTML);
+                    // Find the new message
+                    const newMessage = chatMessages.querySelector('.message:last-child .typewriter');
+
+                    // Start typewriter effect
+                    if (newMessage && typeof data.response === 'string') {
+                        console.log("Valid response for animation:", data.response);
+                        
+                        const responseLength = data.response.length;
+                        newMessage.style.animation = `typewriter ${responseLength / 10}s steps(${responseLength}, end), blink 0.6s step-end infinite`;
+                        newMessage.style.width = `${responseLength}ch`;
+
+                        // Scroll to the bottom after the animation ends
+                        setTimeout(() => {
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }, responseLength / 10 * 1000); // Adjust timeout to match the animation duration
+                    
+                    }
+                    
+                   
+                } catch (error) {
+                    console.error('Error:', error);
+                    chatMessages.insertAdjacentHTML('beforeend', `
+                        <div class="message system">
+                            <div class="content">
+                                <p>An error occurred while fetching the response.</p>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+        });
+    </script>
+
+
+    <style>
+        /* type writter css */
+
+.typewriter {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid black;
+    animation: typewriter 2s steps(40, end), blink 0.75s step-end infinite;
+    width: 0; /* Hidden initially */
+}
+
+@keyframes typewriter {
+    from {
+        width: 0;
+    }
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+
+
+    </style>
+</body>
+</html>

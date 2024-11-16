@@ -6,6 +6,9 @@ import json
 
 from django.shortcuts import render
 from .models import FAQ
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_exempt  # Snot included CSRF tokens
 def chatbot_view(request):
@@ -29,6 +32,8 @@ def chatbot_view(request):
         response = "I'm sorry, I don't have an answer for that."
         if matched_faq and max_keywords_matches > 0:
             response = matched_faq.answer
+            
+        logger.info(f"User query: {user_query}, Response: {response}")
 
         return JsonResponse({'response': response})  # Return JSON response
     return render(request, 'index.html')
